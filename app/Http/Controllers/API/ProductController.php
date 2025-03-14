@@ -16,7 +16,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Cache::flexible('products_cursor_' . request('cursor'), [1, 1], function(){
+        return Cache::flexible('product_lists_' . request('cursor'), [1, 1], function(){
             /**
              * Use cursor pagination for best performance
              */
@@ -73,14 +73,21 @@ class ProductController extends Controller
     public function product($id)
     {
         $product = Product::find($id);
-        
+
         if (empty($product)) {
             return response()->json([
                 'message' => 'Product not found',
             ], 404);
         }
 
-        return response()->json(new ProductResource($product));
+        /**
+         * Product cached
+         */
+        $cachedProduct = Cache::remember('product_id_'. $id, 900, function() use ($product) {
+            return $product;
+        });
+
+        return response()->json(new ProductResource($cachedProduct));
     }
 
     /**
@@ -91,6 +98,12 @@ class ProductController extends Controller
        $isDeleted = Product::where('id', $id)->delete();
 
        if ($isDeleted) {
+            /**
+             * Delete cached data
+             */
+            Cache::forget('product_lists_*');
+            Cache::forget('product_id_'. $id);
+
             return response()->json([
                 'message' => 'Product deleted successfully',
             ]);
