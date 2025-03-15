@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ImageOrId;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProductRequest extends FormRequest
@@ -33,11 +34,27 @@ class ProductRequest extends FormRequest
         ];
 
         if (! empty(request('id'))) {
-            $rules['name'] = 'required|max:50|unique:products,name,'. request('id');
+            $rules['name'] = 'nullable|max:50|unique:products,name,'. request('id');
+            $rules['id'] = 'required|integer|exists:products,id';
+            $rules['description'] = 'nullable|string|min:50|max:500';
+            $rules['price'] = 'nullable|numeric';
+            $rules['discount'] = 'nullable|numeric';
+            $rules['stock'] = 'nullable|integer';
+            $rules['status'] = 'nullable|in:0,1';
             $rules['images'] = 'nullable|array';
-            $rules['images.*'] = 'nullable|image|mimes:png,jpeg,jpg|size:2048';
+            $rules['images.*'] = ['required', new ImageOrId];
         }
 
         return $rules;
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'id' => request('id'),
+        ]);
     }
 }

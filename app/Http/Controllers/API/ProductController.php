@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\API\ProductResource;
 use App\Models\Product;
@@ -16,7 +18,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Cache::flexible('product_lists_' . request('cursor'), [1, 1], function(){
+        return Cache::flexible('product_lists_' . request('cursor'), [5, 1800], function(){
             /**
              * Use cursor pagination for best performance
              */
@@ -34,6 +36,75 @@ class ProductController extends Controller
     }
 
     /**
+     * Update a product by id
+     */
+    public function update(ProductRequest $productRequest, $id)
+    {
+        /**
+         * Convert POST request to PUT request for preventing violation in case of update resource
+         */
+        if (request()->isMethod('post')) {
+            request()->setMethod('put');
+        }
+
+        $validatedData = $productRequest->validated();
+
+        $product = Product::find($id);
+
+        if (request()->has('name')) {
+            $product->name = $validatedData['name'];
+        }
+
+        if (request()->has('description')) {
+            $product->description = $validatedData['description'];
+        }
+
+        if (request()->has('price')) {
+            $product->price = $validatedData['price'];
+        }
+
+        if (request()->has('discount')) {
+            $product->discount = $validatedData['discount'];
+        }
+
+        if (request()->has('stock')) {
+            $product->stock = $validatedData['stock'];
+        }
+
+        if (request()->has('status')) {
+            $product->status = $validatedData['status'];
+        }
+
+        $product->save();
+
+        /**
+         * Insert new product images and delete existing image if image id provided
+         */
+        if (! empty($validatedData['images'])) {
+            foreach($validatedData['images'] as $fileOrImageId) {
+                if ($fileOrImageId instanceof \Illuminate\Http\UploadedFile) {
+                    $product->images()->create([
+                        'path' => $fileOrImageId->store("product/{$product->id}", 'public'),
+                    ]);
+                }
+    
+                if (filter_var($fileOrImageId, FILTER_VALIDATE_INT)) {
+                    if (! empty($productImage = $product->images()->find($fileOrImageId))) {
+                        Storage::delete("{$productImage?->path}");
+    
+                        $productImage->delete();
+                    }
+                }
+            }
+        }
+
+        return response()->json([
+            'message' => 'Product updated successfully',
+            'data'    => new ProductResource($product),
+        ]);
+    }
+
+    /**
      * Create Product
      */
     public function store(ProductRequest $productRequest) 
@@ -41,7 +112,7 @@ class ProductController extends Controller
         DB::beginTransaction();
 
         try {
-            $product = Product::create($productRequest->except(['images']));
+            $product = Product::create($productRequest->validated()->except(['images']));
 
             /**
              * Insert product images
@@ -95,9 +166,15 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-       $isDeleted = Product::where('id', $id)->delete();
+        $product = Product::where('id', $id)->find($id);
 
-       if ($isDeleted) {
+        foreach($product?->images ?? [] as $image) {
+            Storage::disk('public')->delete("{$image->path}");
+        }
+
+        if (! empty($product) 
+            && $product->delete()
+        ) {
             /**
              * Delete cached data
              */
@@ -107,7 +184,7 @@ class ProductController extends Controller
             return response()->json([
                 'message' => 'Product deleted successfully',
             ]);
-       }
+        }
 
         return response()->json([
             'message' => 'Encountered an error while deleting the product',
