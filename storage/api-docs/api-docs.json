@@ -1,0 +1,355 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Documentation",
+        "contact": {
+            "name": "Manish Techniz",
+            "email": "manishtechniz@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Localhost"
+        }
+    ],
+    "paths": {
+        "/api/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "List of products",
+                "operationId": "ab015cc2055ac75e6d23c628675c26e7",
+                "responses": {
+                    "200": {
+                        "description": "Successfully fetched products",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 8,
+                                            "name": "Karl Lind",
+                                            "price": "953.47",
+                                            "discount": "78.0400",
+                                            "stock": 492,
+                                            "status": 1,
+                                            "images": [
+                                                {
+                                                    "id": 22,
+                                                    "image_url": "https://example.com/image.jpg"
+                                                }
+                                            ],
+                                            "description": "Voluptas veritatis omnis eius quae iste porro tempora."
+                                        }
+                                    ],
+                                    "per_page": 2,
+                                    "next_page_url": "https://example.com/api/products?cursor=eyJpZCI6NywiX3BvaW50c1RvTmV4dEl0ZW1zIjp0cnVlfQ",
+                                    "prev_page_url": null
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Create a new product",
+                "operationId": "7ff81b1681ff3180e5b73a2e15f2c67b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {},
+                            "example": {
+                                "name": "Laptop",
+                                "price": 1299.99,
+                                "discount": 100.5,
+                                "stock": 100,
+                                "status": "0 or 1",
+                                "images": [
+                                    "file - jpeg, png, jpg"
+                                ],
+                                "description": "This is a description"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Product created successfully",
+                                    "data": {
+                                        "id": 8,
+                                        "name": "Karl Lind",
+                                        "price": "953.47",
+                                        "discount": "78.0400",
+                                        "stock": 492,
+                                        "status": "0 or 1",
+                                        "images": [
+                                            {
+                                                "id": 22,
+                                                "image_url": "https://example.com/image.jpg"
+                                            }
+                                        ],
+                                        "description": "Voluptas veritatis omnis eius quae iste porro tempora."
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422-A": {
+                        "description": "Failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "The name field is required. (and 6 more errors)"
+                                }
+                            }
+                        }
+                    },
+                    "422-B": {
+                        "description": "Failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "The name field is required. (and 6 more errors)",
+                                    "errors": {
+                                        "name": [
+                                            "The name field is required."
+                                        ],
+                                        "description": [
+                                            "The description field is required."
+                                        ],
+                                        "price": [
+                                            "The price field is required."
+                                        ],
+                                        "discount": [
+                                            "The discount field is required."
+                                        ],
+                                        "stock": [
+                                            "The stock field is required."
+                                        ],
+                                        "status": [
+                                            "The status field is required."
+                                        ],
+                                        "images": [
+                                            "The images field is required."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/{id}/update": {
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Update a product",
+                "operationId": "b7204748ff7862cdcc41442d963b5c95",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Product id",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {},
+                            "example": {
+                                "name": "Laptop",
+                                "price": 1299.99,
+                                "discount": 100.5,
+                                "stock": 100,
+                                "status": "0 or 1",
+                                "images": [
+                                    "file - jpeg, png, jpg",
+                                    "id - Provide image id to delete image"
+                                ],
+                                "description": "This is a description"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Product updated successfully",
+                                    "data": {
+                                        "id": 8,
+                                        "name": "Karl Lind",
+                                        "price": "953.47",
+                                        "discount": "78.0400",
+                                        "stock": 492,
+                                        "status": "0 or 1",
+                                        "images": [
+                                            {
+                                                "id": 22,
+                                                "image_url": "https://example.com/image.jpg"
+                                            }
+                                        ],
+                                        "description": "Voluptas veritatis omnis eius quae iste porro tempora."
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422-A": {
+                        "description": "Failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Encountered an error while updating the product"
+                                }
+                            }
+                        }
+                    },
+                    "422-B": {
+                        "description": "Failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "The images field must be an array",
+                                    "errors": {
+                                        "images": [
+                                            "The images field must be an array."
+                                        ],
+                                        "other attributes": [
+                                            "other attributes message"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/{id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get specific product by id",
+                "operationId": "4cb0e646ab31e1216428f53cd12346d3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Product id",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Product fetched successfully",
+                                    "data": {
+                                        "id": 8,
+                                        "name": "Karl Lind",
+                                        "price": "953.47",
+                                        "discount": "78.0400",
+                                        "stock": 492,
+                                        "status": "0 or 1",
+                                        "images": [
+                                            {
+                                                "id": 22,
+                                                "image_url": "https://example.com/image.jpg"
+                                            }
+                                        ],
+                                        "description": "Voluptas veritatis omnis eius quae iste porro tempora."
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Product not found"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Delete a product",
+                "operationId": "33173a96c7ab5ed4ba9ceaffb4c6003d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Product id",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Product deleted successfullysss"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Encountered an error while deleting the product"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Products",
+            "description": "Products"
+        }
+    ]
+}
