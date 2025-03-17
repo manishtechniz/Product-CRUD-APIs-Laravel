@@ -14,3 +14,7 @@ Follow commands for run project:
 5. `php artisan optimize:clear`
 
 6. `php artisan serve`
+
+# APIs documentation
+
+- Visit `/api/documentation` route for accessing documentation
