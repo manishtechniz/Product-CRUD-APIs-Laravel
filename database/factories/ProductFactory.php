@@ -25,7 +25,7 @@ class ProductFactory extends Factory
             'description' => fake()->sentence(),
             'price'       => fake()->randomFloat(2, 400, 2000),
             'stock'       => fake()->numberBetween(50, 500),
-            'status'      => fake()->boolean(),
+            'status'      => 1,
             'discount'    => fake()->randomFloat(2, 0, 100),
         ];
     }
