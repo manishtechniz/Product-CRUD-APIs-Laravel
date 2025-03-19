@@ -36,13 +36,6 @@ Build Image: `docker build -t image-name .`
 
 where `-t` is tag name and `.` is `Dockerfile` location
 
-# How to use Dockerize image
-
-`docker run -p 8000:80 image-name`
-
-If container is already running then use `docker exec -it container-id bash`
-where `-it` is intreactive mode which mean can be move to container terminal
-
 # How to use dockerize image
 
 NOTE:: I already created docker image for this github repository. [click here](https://hub.docker.com/r/manishtechniz/laravel-cache-apis-bytequest)
