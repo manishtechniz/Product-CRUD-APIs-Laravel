@@ -43,3 +43,32 @@ where `-t` is tag name and `.` is `Dockerfile` location
 If container is already running then use `docker exec -it container-id bash`
 where `-it` is intreactive mode which mean can be move to container terminal
 
+# How to use dockerize image
+
+NOTE:: I already created docker image for this github repository. [click here](https://hub.docker.com/r/manishtechniz/laravel-cache-apis-bytequest)
+
+Lets Example:
+
+1. `docker pull manishtechniz/laravel-cache-apis-bytequest`
+
+2. `docker run -p <expose port>:80 manishtechniz/laravel-cache-apis-bytequest`
+
+NOTE:: Suggest exposing port: `8000`, because you can run APIs from `/api/documentation` route without using `postman` and others.
+
+When you run this command terminal will not be released because of working Apache in the foreground. If you want to interact with the running container then:
+
+A. Open a new terminal and run commands
+
+B. `docker container ls`: get running containers
+
+C. `docker exec -it <cotainer-id> bash`
+
+
+# Other useful commands
+
+1. `docker start <container-id>`: Start container
+2. `docker stop <container-id>` : Stop container
+3. `docker container ls -a` or `docker ps -a`: List stopped containers
+4. `docker system prune <container-id>`: Delete stopped container for releasing space.
+
+Pro tip: `docker system prune $(docker ps -q)`: Delete all stopped containers.
