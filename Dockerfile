@@ -60,9 +60,6 @@ RUN chmod 777 -R /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 80 3306
 
-# Copy sql file
-ADD bytequest.sql /
-
 # Add bash script
 ADD start.sh /
 
