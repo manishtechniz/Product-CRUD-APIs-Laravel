@@ -63,5 +63,7 @@ C. `docker exec -it <cotainer-id> bash`
 2. `docker stop <container-id>` : Stop container
 3. `docker container ls -a` or `docker ps -a`: List stopped containers
 4. `docker system prune <container-id>`: Delete stopped container for releasing space.
-
-Pro tip: `docker system prune $(docker ps -q)`: Delete all stopped containers.
+  Pro tip: `docker system prune -f`: Delete all stopped containers.
+5. `docker rm -f <container-id>`: Remove container permanent
+6. `docker rm -f $(docker ps -q)`: Remove all running container permanent. 
+7. `docker rm -f $(docker ps -qa)`: Remove all running & stoped containers permanent
